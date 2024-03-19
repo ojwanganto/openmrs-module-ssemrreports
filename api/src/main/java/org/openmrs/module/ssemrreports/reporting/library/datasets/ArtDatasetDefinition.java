@@ -148,6 +148,8 @@ public class ArtDatasetDefinition extends SSEMRBaseDataSet {
 	List<ColumnParameters> regimenDisaggregation = Arrays.asList(male_0_to_9, female_0_to_9, male_10_to_14, female_10_to_14,
 	    male_15_to_49, female_15_to_49, male_50_plus, female_50_plus, colTotal);
 	
+	List<ColumnParameters> basicMaleFemaleDisaggregation = Arrays.asList(subTotalMales, subTotalFemales);
+	
 	List<ColumnParameters> pbfAgeOnlyDisaggregation = Arrays.asList(p10_to_14, p15_to_19, p20_to_24, p25_to_29, p30_to_34,
 	    p35_to_39, p40_to_44, p45_to_49, p50plus, colTotal);
 	
@@ -248,8 +250,6 @@ public class ArtDatasetDefinition extends SSEMRBaseDataSet {
 		dsd.setName("currentOnArtByAge");
 		dsd.setDescription("ART dataset - age at start of ART");
 		dsd.addParameters(getParameters());
-		///dsd.addDimension("gender", map(dimension.gender(), ""));
-		//dsd.addDimension("age", map(dimension.age(), "effectiveDate=${endDate}"));
 		
 		dsd.addColumn(
 		    "8-01",
@@ -514,6 +514,30 @@ public class ArtDatasetDefinition extends SSEMRBaseDataSet {
 		    "Current on ART on 2nd-line regimen, Female 50+",
 		    map(indicator.getIndicator("Current on ART on 2nd-line regimen 50+, female",
 		        map(artCohortQueries.getCurrentOnArtOnSecondLineRegimen(50, 150, "F"), mappings)), mappings), "");
+		// TODO: fix npe thrown when running the report
+		//		addRow(
+		//		    dsd,
+		//		    "inh",
+		//		    "Clients on INH",
+		//		    map(indicator.getIndicator("Clients on INH",
+		//		        map(artCohortQueries.patientsOnINHTreatmentCohortDefinition(), mappings)), mappings),
+		//		    basicMaleFemaleDisaggregation, Arrays.asList("01", "02"));
+		//
+		//		addRow(
+		//		    dsd,
+		//		    "onTbTreatment",
+		//		    "Clients on TB treatment",
+		//		    map(indicator.getIndicator("Clients on TB treatment",
+		//		        map(artCohortQueries.patientsCurrentlyOnTBCohortDefinition(), mappings)), mappings),
+		//		    basicMaleFemaleDisaggregation, Arrays.asList("01", "02"));
+		//
+		//		addRow(
+		//		    dsd,
+		//		    "startedTBTreatment",
+		//		    "Clients initiated on TB treatment",
+		//		    map(indicator.getIndicator("Clients initiated on TB treatment",
+		//		        map(artCohortQueries.patientsNewlyInitiatedOnTBTreatmentCohortDefinition(), mappings)), mappings),
+		//		    basicMaleFemaleDisaggregation, Arrays.asList("01", "02"));
 		return dsd;
 		
 	}
@@ -635,6 +659,29 @@ public class ArtDatasetDefinition extends SSEMRBaseDataSet {
 			
 		}
 		
+		dsd.addColumn(
+		    "onCtx",
+		    "clients on CTX",
+		    map(indicator.getIndicator("clients on CTX",
+		        map(artCohortQueries.patientsOnCTXTreatmentCohortDefinition(), mappings)), mappings), "");
+		
+		dsd.addColumn(
+		    "onDapsone",
+		    "clients on Dapsoine",
+		    map(indicator.getIndicator("clients on Dapsone",
+		        map(artCohortQueries.patientsOnDapsoneTreatmentCohortDefinition(), mappings)), mappings), "");
+		
+		dsd.addColumn(
+		    "ltfu",
+		    "clients who are LTFU",
+		    map(indicator.getIndicator("clients who are on LTFU",
+		        map(artCohortQueries.patientsLtfuCohortDefinition(), mappings)), mappings), "");
+		
+		dsd.addColumn(
+		    "dead",
+		    "clients who Died",
+		    map(indicator.getIndicator("clients who Died", map(artCohortQueries.patientsDeadCohortDefinition(), mappings)),
+		        mappings), "");
 		return dsd;
 		
 	}
